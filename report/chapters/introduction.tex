@@ -1,2 +1,23 @@
 \section{Introduction}
-
+Informally we describe Linear Representation Hypothesis (LRH) to be that concepts (e.g Gender, Vehicle, etc)
+can be represented by linear directions in the activation space, \citep{Mikolov2013LinguisticRI}. 
+We may also define LRH formally, following \citet{park2023LRH}. We start by defining concepts, 
+which we say are variables that can be changed in isolation.
+And then LRH says that each concept corresponds to a particular linear subspace (Or direction).
+Throughout this project we will switch between both as convenient and depending on the context,
+to gather empirical evidence while also testing and maintaining theoretical foundations of LRH
+as presented in \citet{park2023LRH}. Furthermore, Large Language Models (LLMs) are susceptible 
+to malicious prompts and may produce responses based on harmful stereotypical associations
+\citet{jeoung-etal-2023-stereomap}. While there are many safety measurements in place to combat this, 
+they tend to come at the cost of the model's own utility (i.e overtuning for safety and harming utility).
+Safety and utility both satisfy \citet{park2023LRH} defintions of concepts, so we may reasonablly ask if they are
+causally separable.
+We use both notions of LRH, and both suggest that safety and utility may be represented by linear directions or for 
+a theoretical basis, they may occupy orthogonal subspaces. So we aim to make the following contributions:
+\begin{enumerate}
+    \item Use activation-aware SVD (actSVD) and difference-of-means (DoM) to test and gather empirical evidence
+    about the relationship between safety and utility, specifically if they are orthogonal.
+    \item Apply \citet{park2023LRH} causal separabillity framework to safety and utility.
+    \item Provide a comparative analysis of actSVD and DoM as methods for identifying 
+    and extracting directions in the activation space. 
+\end{enumerate}

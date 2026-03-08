@@ -8,7 +8,7 @@ import os
 # 1. Adapt for computers without GPU: force CPU usage and change precision to float32
 device = torch.device("cpu")
 model_name = "google/gemma-3-1b-it"
-model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float32).to(device)
+model = AutoModelForCausalLM.from_pretrained(model_name, dtype=torch.float32).to(device)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 harmful = [

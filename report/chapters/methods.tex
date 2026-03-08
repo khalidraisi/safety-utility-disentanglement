@@ -1,2 +1,24 @@
 \section{Methods}
-Description of methods.
+We want to find out if safety and utility are separate in Large Language Models (LLMs). Our method has three main steps.
+
+\subsection{Data and Extraction}
+First, we use the \textit{google/gemma-3-1b-it} model to get internal hidden states. We use three datasets:
+\begin{itemize}
+    \item \textbf{Safety:} We use AdvBench for harmful prompts and Alpaca for harmless prompts.
+    \item \textbf{Utility:} We use HelpSteer2 for high-utility and low-utility prompts.
+\end{itemize}
+We collect the activations from the model's last layers. Then, we use PCA to reduce the data to 3D so we can easily draw and see it.
+
+\subsection{Difference of Means (DoM)}
+Second, we use Difference of Means (DoM) to find a single "safety direction". We calculate the average (mean) activation for harmful and harmless prompts. 
+
+Let $M_{bad}$ be the mean of harmful prompts, and $M_{good}$ be the mean of harmless prompts. The safety direction $V_{safety}$ is simply their difference:
+$$ V_{safety} = M_{bad} - M_{good} $$
+We do the same thing for high and low utility to get $V_{utility}$. Finally, we check if $V_{safety}$ and $V_{utility}$ are orthogonal (independent from each other).
+
+\subsection{actSVD}
+Sometimes, safety and utility are bigger than just one direction. So, we use actSVD to find their larger subspaces. 
+
+We calculate the covariance matrix $C$ of the activations and apply SVD:
+$$ C = U \times S \times V^T $$
+Here, $V$ gives us the most important directions. By comparing the $V$ of safety and utility, we can prove if they belong to totally different spaces.

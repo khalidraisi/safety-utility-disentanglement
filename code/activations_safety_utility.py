@@ -1,5 +1,5 @@
 #I wanted to try separability in terms of utility, tried PCA 2D and 3D with neither seem seperable
-#We may also try SAE? 
+#We may also try SAE/larger models (nonseparable safety/utility)? 
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -63,7 +63,7 @@ def extract_all(prompts, label, layer):
     return np.array(activations)
 
 
-#safety shown to be separable in last layer using PCA, test other layers for utility (26 total layers)
+#safety shown to be separable in last layer using PCA already, test other layers for utility (26 total layers)
 acts_harmful   = extract_all(harmful_prompts,      "harmful", layer=-1)
 acts_harmless  = extract_all(harmless_prompts,     "harmless", layer=-1) 
 acts_high_util = extract_all(high_utility_prompts, "high-util", layer=-2)

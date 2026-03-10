@@ -1,6 +1,6 @@
 \section{Literature review}
 
-Our proposed research focuses on the internal geometry of Large Language Models (LLMs) and the mechanics of AI interpretability. Because the theoretical definitions of our problem space have been established, we ground our methodology directly in the following empirical works.
+Our proposed research focuses on the internal geometry of LLMs and the mechanics of AI interpretability. Because the theoretical definitions of our problem space have been established, we ground our methodology directly in the following empirical works.
 
 \paragraph{Universal and Transferable Adversarial Attacks on Aligned Language Models (Zou et al., 2023).}
 Current methods for aligning LLMs to be safe rely heavily on behavioral fine-tuning, such as Reinforcement Learning from Human Feedback. However, \citet{zou2023gcg} demonstrated that these surface-level guardrails are fundamentally brittle. They introduced the Greedy Coordinate Gradient search method, which automatically generates adversarial prompt suffixes. When appended to a malicious query, these suffixes universally jailbreak aligned models by maximizing the probability of the model producing an affirmative response, entirely bypassing the safety training. This brittleness strongly motivates our project. Because behavioral filters can be bypassed so easily via input perturbations, we hypothesize that true safety alignment must be understood and engineered at the mechanistic level within the internal representations of the model itself.

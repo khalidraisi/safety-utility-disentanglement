@@ -1,2 +1,51 @@
 \section{Experiment Design}
-Description of data sets to use for your experiments, the experimental settings, and the experiments to be conducted. This should be approximately one page long
+Our experimental framework aims to characterize the geometric relationship between safety and utility within LLM activation spaces, specifically testing the hypothesis that these features occupy distinct, nearly orthogonal subspaces
+
+\subsection{Activation Extraction Methods}
+To identify the vectors governing model behavior, we implement three primary extraction techniques:
+\begin{itemize}
+    \item \textbf{Difference-of-Means (DoM):} Following \citet{arditi2024refusal}, we extract a refusal direction by calculating the difference between average activations of harmful and harmless prompts
+    \item \textbf{Activation SVD (ActSVD):} We utilize Singular Value Decomposition to identify the principal components that define safety and utility subspaces, allowing for a higher-dimensional representation than a single vector
+    \item \textbf{Contrastive SVD:} To eliminate confounders such as text length or syntax, we perform SVD on the difference vectors of contrastive prompt pairs
+\end{itemize}
+
+\subsection{Subspace Analysis and Disentanglement}
+\label{subsec:disentanglement}
+
+The core of our experimental design is to determine the degree of entanglement between safety and utility. We define "safety" as the model's tendency to refuse harmful instructions and "utility" as its ability to follow benign, helpful instructions
+
+\subsubsection{Geometric Verification and Comparison}
+To ensure that our extracted directions represent true behavioral features rather than noise, we perform a cross-method verification. We calculate the projection of the \textit{Difference-of-Means} (DoM) vector onto the top $k$ principal components identified by \textit{ActSVD}. A high projection value indicates that both methods are isolating the same geometric structure within the activation space, increasing our confidence in the validity of the identified safety subspace.
+
+\subsubsection{Orthogonalization and Null Space Projection}
+A significant technical challenge is that safety and utility subspaces may naturally overlap, meaning that simple ablation could cause unintended degradation in model coherence. To address this, we implement a mathematical separation protocol:
+\begin{enumerate}
+    \item \textbf{Subspace Extraction:} We extract both a utility projection matrix ($P_{u}$) and a safety projection matrix ($P_{s}$).
+    \item \textbf{Isolating Safety:} We project the safety vector onto the \textit{null space} of the utility subspace. 
+    \item \textbf{Intervention:} This allows us to modify or ablate exclusively safety-critical representations while preserving the directions required for general utility.
+\end{enumerate}
+
+
+
+\subsubsection{Causal Independence Testing}
+In addition to evaluating cosine similarity metrics, we also conduct causal intervention experiments. 
+\begin{itemize}
+    \item \textbf{Safety Ablation:} We remove the safety-associated directions and evaluate the model against standard capability benchmarks (e.g., MMLU or GSM8K) to ensure utility remains intact.
+    \item \textbf{Utility Ablation:} We remove utility-associated directions to observe if the model's refusal guardrails remain functional even when its ability to provide helpful information is impaired.
+\end{itemize}
+If the model maintains high safety (refusal of AdvBench) while utility is ablated, or high utility (HelpSteer performance) while safety is ablated, we can conclude that these features are causally independent.
+
+
+
+\subsection{Datasets and Evaluation Metrics}
+We utilize the following datasets to define our behavioral poles:
+\begin{itemize}
+    \item \textbf{AdvBench:} A dataset of harmful prompts used to evaluate whether the model correctly refuses unsafe instructions.
+    \item \textbf{HelpSteer:} A human-annotated dataset of normal prompts used to evaluate helpfulness and instruction-following quality.
+\end{itemize}
+Performance is quantified via the model's refusal rate on harmful prompts and utility scores on standard capability benchmarks.
+
+\subsection{Models and Computational Setup}
+The experiments are conducted on a suite of instruction-tuned models, including Gemma-2B-IT, Gemma-7B-IT, Llama-2-7B-Chat, and Llama-3-8B-Instruct. Preliminary analysis on Gemma-3-1B-IT has already demonstrated clear linear separability in the activation space using Principal Component Analysis.
+
+All experiments are performed on an NVIDIA A40 GPU, with an estimated runtime of 20 minutes per experiment, ensuring feasibility within our current compute allocation.

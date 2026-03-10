@@ -6,5 +6,4 @@
 *.log
 *.out
 *.synctex.gz
-*.pdf
 %OUTDIR%/

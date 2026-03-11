@@ -34,8 +34,7 @@ In addition to evaluating cosine similarity metrics, we also conduct causal inte
     \item \textbf{Utility Ablation:} We remove utility-associated directions to observe if the model's refusal guardrails remain functional even when its ability to provide helpful information is impaired.
 \end{itemize}
 If the model maintains high safety (refusal of AdvBench) while utility is ablated, or high utility (HelpSteer performance) while safety is ablated, we can conclude that these features are causally independent.
-
-
+Furthermore, maintaining safety or utility while ablating the other provides some evidence for whether they follow \citet{park2023LRH} formalization of causally separable concepts.
 
 \subsection{Datasets and Evaluation Metrics}
 We utilize the following datasets to define our behavioral poles:

@@ -5,6 +5,7 @@
 *.fls
 *.log
 *.out
+*.zip
 *.synctex.gz
 %OUTDIR%/
 .build/

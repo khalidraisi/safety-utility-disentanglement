@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 #We follow the safety layers in aligned models convention of 500 repetitions
 R = 500
 
+#Implementation of section 3.2 of the paper
 def cosine_similarity(A, B):
     dot = np.dot(A, B)
     norm = np.linalg.norm(A) * np.linalg.norm(B)
@@ -56,3 +57,5 @@ def get_similarity_plot(normal_acts, malicious_acts, r=R):
     plt.suptitle("How good is the model at disinguishing different types of prompts?", fontsize=14, y=1.02)
     plt.tight_layout()
     plt.show()
+
+#TODO continue implementation, will also adjust the file as necessary

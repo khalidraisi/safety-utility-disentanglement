@@ -6,6 +6,9 @@
 *.log
 *.out
 *.zip
+.pyc
 *.synctex.gz
 %OUTDIR%/
 .build/
+__pycache__/
+.ipynb_checkpoints/

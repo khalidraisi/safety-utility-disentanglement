@@ -24,9 +24,12 @@ def dom_cosine_similarities(base, group_a, group_b):
         direction_a = a_mean - base_mean
         direction_b = b_mean - base_mean
 
-        direction_a /= np.linalg.norm(direction_a)
-        direction_b /= np.linalg.norm(direction_b)
+        eps = 1e-12
+        direction_a = direction_a / np.maximum(np.linalg.norm(direction_a), eps)
+        direction_b = direction_b / np.maximum(np.linalg.norm(direction_b), eps)
+
         cosine_sims.append(np.dot(direction_a, direction_b))
+
     return np.array(cosine_sims)
 
 
@@ -59,8 +62,9 @@ def dom_permutation_test(base, group_a, group_b, n_iterations=1000):
             dir_a = a_mean_pseudo - base_mean_pseudo
             dir_b = b_mean_pseudo - base_mean_pseudo
 
-            dir_a /= np.linalg.norm(dir_a)
-            dir_b /= np.linalg.norm(dir_b)
+            eps = 1e-12
+            direction_a = direction_a / np.maximum(np.linalg.norm(direction_a), eps)
+            direction_b = direction_b / np.maximum(np.linalg.norm(direction_b), eps)
 
             null_cosine_similarities[i, layer] = np.dot(dir_a, dir_b)
 

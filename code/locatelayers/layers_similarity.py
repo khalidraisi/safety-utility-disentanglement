@@ -1,4 +1,5 @@
 # locatelayers/layers_similarity.py
+# this is an implementation of the locating safety layers paper
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -13,21 +14,26 @@ def cosine_similarity(A, B, eps=1e-12):
         return 0.0
     return float(np.dot(A, B) / denom)
 
-def layer_cosine_sim(act1, act2):
+
+def layer_cosine_sim(act1, act2, eps=1e-12):
     act1 = np.asarray(act1)
     act2 = np.asarray(act2)
-    return [cosine_similarity(act1[k], act2[k]) for k in range(len(act1))]
+    dots = np.sum(act1 * act2, axis=1)
+    norms = np.linalg.norm(act1, axis=1) * np.linalg.norm(act2, axis=1)
+    return dots / np.maximum(norms, eps)
+
+# this is for section 3.2 of the paper
 
 def analysis(acts1, acts2, r=R):
     """
     acts1, acts2: shape = (N, num_layers, hidden_dim)
     return: mean, std for each layer
     """
+    same_object = acts1 is acts2
     acts1 = np.asarray(acts1)
     acts2 = np.asarray(acts2)
 
     results = []
-    same_object = acts1 is acts2
 
     for _ in range(r):
         i = np.random.randint(len(acts1))
@@ -86,3 +92,11 @@ def get_similarity_plot(normal_acts, malicious_acts, r=R, combined=False, save_p
 
     plt.show()
     return nn_mean, nn_std, mm_mean, mm_std, nm_mean, nm_std
+
+
+# TODO this is for section 3.3 of the paper
+
+# this is for section 3.4 (Not implemented yet, figure this out later), 
+# it seems a little more complicated and some things would probably need to be 
+# written within the experiments
+

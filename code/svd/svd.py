@@ -87,6 +87,7 @@ def contrastive_svd(tgt_acts, baseline_acts, r):
 
     return subspaces
 
+# add analyzing part here maybe
 #plot of survival norms
 def survival_plot(survival_norms):
     '''

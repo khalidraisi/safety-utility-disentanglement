@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 R = 500
 
+# (for now at least this isn't used anymore) 
 def cosine_similarity(A, B, eps=1e-12):
     A = np.asarray(A)
     B = np.asarray(B)
@@ -95,6 +96,7 @@ def get_similarity_plot(normal_acts, malicious_acts, r=R, combined=False, save_p
 
 
 # TODO this is for section 3.3 of the paper
+
 
 # this is for section 3.4 (Not implemented yet, figure this out later), 
 # it seems a little more complicated and some things would probably need to be 

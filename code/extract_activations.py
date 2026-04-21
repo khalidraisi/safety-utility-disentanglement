@@ -4,11 +4,13 @@
 # experimenting
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # to use this use this command as a template
+# refer to TEMPLATES for which template name to use
 # python3 extract_activations.py \
 #   --model MODEL_NAME \
 #   --suffix MODEL_SIZE \
 #   --target-dir TARGET_DIRECTORY \
-#   --n PROMPTS_NUM    
+#   --n PROMPTS_NUM
+#   --template TEMPLATE_NAME 
 
 import numpy as np
 import torch
@@ -21,6 +23,49 @@ from pathlib import Path
 
 N = 100 #make sure to change this if we increase prompt #
 DEFAULT_MAX_LENGTH = 512
+
+## The following part is for chat templates
+def _no_template(prompt: str, tokenizer) -> str:
+    '''
+    raw tokens
+    '''
+    return prompt
+ 
+ 
+def _gemma_3_family(prompt: str, tokenizer) -> str:
+    '''
+    gemma3-it models chat template (gemma-3-1b-itand gemma-3-4b-it)
+    use the tokenizer's built in chat template 
+    gemma-3-12b-it and gemma-3-27b-it are multimodal 
+    and ARE NOT CURRENTLY SUPPORTED
+    '''
+    chat = [{"role": "user", "content": prompt}]
+    return tokenizer.apply_chat_template(
+        chat,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+ 
+ 
+# template_name -> formatter function
+# add new entries here when supporting more model families
+TEMPLATES = {
+    "none": _no_template,
+    "gemma-3": _gemma_3_family,
+}
+
+def get_template(name: str):
+    '''
+    looks up a formatter by name
+    '''
+    if name not in TEMPLATES:
+        available = ", ".join(sorted(TEMPLATES.keys()))
+        raise ValueError(
+            f"Unknown template '{name}'. Available templates: {available}"
+        )
+    return TEMPLATES[name]
+
+# the following part is for loading and getting activations etc
 
 def load_model(model_name):
     '''
@@ -56,9 +101,14 @@ def load_prompts(n=N):
     alpaca = load_dataset("tatsu-lab/alpaca")
     harmless_prompts = [entry['instruction'] for entry in alpaca['train']]
 
-    # utility prompts
+    # pick only utility prompts that are rated helpfulness=4
     helpsteer = load_dataset("nvidia/HelpSteer")
-    utility_prompts = [entry['prompt'] for entry in helpsteer['train']]
+    utility_prompts = [
+        entry['prompt']
+        for entry in helpsteer['train']
+        if entry['helpfulness'] == 4
+    ]
+    utility_prompts = list(dict.fromkeys(utility_prompts))
 
     harmful_prompts = harmful_prompts[:n]
     harmless_prompts = harmless_prompts[:n]
@@ -67,7 +117,7 @@ def load_prompts(n=N):
     return harmful_prompts, harmless_prompts, utility_prompts
 
 def extract_all_and_save(harmful_prompts, harmless_prompts, utility_prompts,
-                         model, tokenizer, suffix, output_dir):
+                         model, tokenizer, suffix, output_dir, template_fn):
     '''
     runs all three prompt through the model, 
     saves activations respective to each to disk as .npy
@@ -77,7 +127,12 @@ def extract_all_and_save(harmful_prompts, harmless_prompts, utility_prompts,
     output_dir.mkdir(parents=True, exist_ok=True)
 
     def get_activations(prompt):
-        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        formatted = template_fn(prompt, tokenizer)
+        inputs = tokenizer(
+            formatted,
+            return_tensors="pt",
+            add_special_tokens=False,
+        ).to(model.device)
         with torch.no_grad():
             outputs = model(**inputs, output_hidden_states=True)
         return [h[:, -1, :].float().cpu().numpy()[0] for h in outputs.hidden_states]
@@ -103,18 +158,24 @@ def parse_args():
                    help="Directory for saved .npy files, e.g. activations/gemma3acts")
     p.add_argument("--n", type=int, default=N,
                    help=f"Prompts per category (default: {N})")
+    p.add_argument("--template", default="none",
+                   choices=sorted(TEMPLATES.keys()),
+                   help="Chat template to apply to prompts (default: none = raw)")
     return p.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-
+    
+    template_fn = get_template(args.template)
+ 
     harmful_prompts, harmless_prompts, utility_prompts = load_prompts(n=args.n)
     model, tokenizer = load_model(args.model)
-
+ 
     extract_all_and_save(
         harmful_prompts, harmless_prompts, utility_prompts,
         model, tokenizer, args.suffix, args.target_dir,
+        template_fn=template_fn,
     )
 
     del model, tokenizer

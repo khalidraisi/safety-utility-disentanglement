@@ -63,8 +63,8 @@ def dom_permutation_test(base, group_a, group_b, n_iterations=1000):
             dir_b = b_mean_pseudo - base_mean_pseudo
 
             eps = 1e-12
-            direction_a = direction_a / np.maximum(np.linalg.norm(direction_a), eps)
-            direction_b = direction_b / np.maximum(np.linalg.norm(direction_b), eps)
+            dir_a = dir_a / np.maximum(np.linalg.norm(dir_a), eps)
+            dir_b = dir_b / np.maximum(np.linalg.norm(dir_b), eps)
 
             null_cosine_similarities[i, layer] = np.dot(dir_a, dir_b)
 

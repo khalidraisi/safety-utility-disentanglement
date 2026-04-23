@@ -15,20 +15,20 @@
 import numpy as np
 import torch
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor
 from datasets import load_dataset
 import argparse
 import gc
 from pathlib import Path
 
-N = 100 #make sure to change this if we increase prompt #
-DEFAULT_MAX_LENGTH = 512
+N = 500
 
 ## The following part is for chat templates
 def _no_template(prompt: str, tokenizer) -> str:
     '''
     raw tokens
     '''
+    print("Note: you may have mispelled something or this model activations extraction is not supported currently\n")
     return prompt
  
  
@@ -45,13 +45,25 @@ def _gemma_3_family(prompt: str, tokenizer) -> str:
         tokenize=False,
         add_generation_prompt=True,
     )
- 
+
+def _gemma_4_family(prompt: str, tokenizer) -> str:
+    '''
+    template for gemma-4-E2B-it and gemma-4-E4B-it
+    '''
+    chat = [{"role": "user", "content": prompt}]
+    return tokenizer.apply_chat_template(
+        chat,
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=False, #we could try with reasoning models also?
+    )
  
 # template_name -> formatter function
 # add new entries here when supporting more model families
 TEMPLATES = {
     "none": _no_template,
     "gemma-3": _gemma_3_family,
+    "gemma-4": _gemma_4_family,
 }
 
 def get_template(name: str):
@@ -67,24 +79,32 @@ def get_template(name: str):
 
 # the following part is for loading and getting activations etc
 
-def load_model(model_name):
+def load_model(model_name, use_processor=False):
     '''
     given the model name it loads the model and its tokenizer
-    we use huggingface, after loading this becomes ready for 
+    we use huggingface, after loading this becomes ready for
     inference and activation extraction
-    returns the model and its tokenizer
+    returns the model and its tokenizer or processor
+    pass use_processor=True to use AutoProcessor for Gemma4
     '''
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-
+    if use_processor:
+        tok_or_proc = AutoProcessor.from_pretrained(model_name)
+        # processors wrap an underlying tokenizer; patch pad token there
+        inner = getattr(tok_or_proc, "tokenizer", None)
+        if inner is not None and inner.pad_token is None:
+            inner.pad_token = inner.eos_token
+    else:
+        tok_or_proc = AutoTokenizer.from_pretrained(model_name)
+        if tok_or_proc.pad_token is None:
+            tok_or_proc.pad_token = tok_or_proc.eos_token
+ 
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         torch_dtype="auto",
         device_map="auto",
     )
     model.eval()
-    return model, tokenizer
+    return model, tok_or_proc
 
 def load_prompts(n=N):
     '''
@@ -117,7 +137,7 @@ def load_prompts(n=N):
     return harmful_prompts, harmless_prompts, utility_prompts
 
 def extract_all_and_save(harmful_prompts, harmless_prompts, utility_prompts,
-                         model, tokenizer, suffix, output_dir, template_fn):
+                         model, tok_or_proc, suffix, output_dir, template_fn, is_processor=False):
     '''
     runs all three prompt through the model, 
     saves activations respective to each to disk as .npy
@@ -127,12 +147,19 @@ def extract_all_and_save(harmful_prompts, harmless_prompts, utility_prompts,
     output_dir.mkdir(parents=True, exist_ok=True)
 
     def get_activations(prompt):
-        formatted = template_fn(prompt, tokenizer)
-        inputs = tokenizer(
-            formatted,
-            return_tensors="pt",
-            add_special_tokens=False,
-        ).to(model.device)
+        formatted=template_fn(prompt, tok_or_proc)
+        if is_processor:
+            inputs = tok_or_proc(
+                text=formatted,
+                return_tensors="pt",
+                add_special_tokens=False,
+            ).to(model.device)
+        else:
+            inputs = tok_or_proc(
+                formatted,
+                return_tensors="pt",
+                add_special_tokens=False,
+            ).to(model.device)
         with torch.no_grad():
             outputs = model(**inputs, output_hidden_states=True)
         return [h[:, -1, :].float().cpu().numpy()[0] for h in outputs.hidden_states]
@@ -168,17 +195,20 @@ if __name__ == "__main__":
     args = parse_args()
     
     template_fn = get_template(args.template)
+    use_processor = args.template == "gemma-4"
+
  
     harmful_prompts, harmless_prompts, utility_prompts = load_prompts(n=args.n)
-    model, tokenizer = load_model(args.model)
- 
+    model, tok_or_proc = load_model(args.model, use_processor=use_processor)
+
     extract_all_and_save(
-        harmful_prompts, harmless_prompts, utility_prompts,
-        model, tokenizer, args.suffix, args.target_dir,
-        template_fn=template_fn,
+    harmful_prompts, harmless_prompts, utility_prompts,
+    model, tok_or_proc, args.suffix, args.target_dir,
+    template_fn=template_fn,
+    is_processor=use_processor,
     )
 
-    del model, tokenizer
+    del model, tok_or_proc
     gc.collect()
     if torch.cuda.is_available():
         torch.cuda.empty_cache()

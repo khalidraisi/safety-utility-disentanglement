@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[preprint]{acl}
+
+% Standard package includes
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+% For Vietnamese characters
+% \usepackage[T5]{fontenc}
+% See https://www.latex-project.org/help/documentation/encguide.pdf for other character sets
+
+% This assumes your files are encoded as UTF8
+\usepackage[utf8]{inputenc}
+
+% This is not strictly necessary, and may be commented out,
+% but it will improve the layout of the manuscript,
+% and will typically save some space.
+\usepackage{microtype}
+
+% This is also not strictly necessary, and may be commented out.
+% However, it will improve the aesthetics of text in
+% the typewriter font.
+\usepackage{inconsolata}
+
+%Including images in your LaTeX document requires adding
+%additional package(s)
+\usepackage{graphicx}
+
+\usepackage{natbib}
+
+% If the title and author information does not fit in the area allocated, uncomment the following
+%
+%\setlength\titlebox{<dim>}
+%
+% and set <dim> to something 5cm or larger.
+
+\title{Geometry of Safety and Utility in Activation Spaces of Aligned Large Language Models}
+
+\author{
+  \textbf{Khalid Al-Raisi\textsuperscript{1}},
+  \textbf{Mohammed Al-Hinai\textsuperscript{1}},
+  \textbf{Vivek Saravanan\textsuperscript{1}},
+\\
+  \textbf{David Wu\textsuperscript{1}},
+  \textbf{Zakeriya Chehime\textsuperscript{1}},
+  \textbf{Will Frost\textsuperscript{1}}
+\\
+\\
+  \textsuperscript{1}University of Wisconsin-Madison
+\\
+  \small{
+    \href{mailto:kalraisi@wisc.edu}{\texttt{kalraisi}},
+    \href{mailto:malhinai@wisc.edu}{\texttt{malhinai}},
+    \href{mailto:vsaravanan@wisc.edu}{\texttt{vsaravanan}},
+    \href{mailto:zchehime@wisc.edu}{\texttt{zchehime}},
+    \href{mailto:bwu255@wisc.edu}{\texttt{bwu255}},
+    \href{mailto:wjfrost2@wisc.edu}{\texttt{wjfrost2}}
+    \texttt{@wisc.edu}
+  }
+}
+
+\begin{document}
+\maketitle
+
+\input{chapters/abstract}
+\input{chapters/introduction}
+\input{chapters/related_work}
+\input{chapters/methods}
+\input{chapters/experiments}
+\input{chapters/results}
+\input{chapters/limitations}
+\input{chapters/discussion_and_conclusion}
+\input{chapters/contribution_statement}
+
+
+
+
+% Bibliography entries for the entire Anthology, followed by custom entries
+%\bibliography{custom,anthology-overleaf-1,anthology-overleaf-2}
+
+% Custom bibliography entries only
+\nocite{*}
+
+\bibliography{custom}
+
+\end{document}

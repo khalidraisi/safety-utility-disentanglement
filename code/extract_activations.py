@@ -130,6 +130,10 @@ def load_prompts(n=N):
     ]
     utility_prompts = list(dict.fromkeys(utility_prompts))
 
+    #add helpfulness=0
+
+    #add taking helpfulness 
+
     harmful_prompts = harmful_prompts[:n]
     harmless_prompts = harmless_prompts[:n]
     utility_prompts = utility_prompts[:n]

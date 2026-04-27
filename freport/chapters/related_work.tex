@@ -1,0 +1,18 @@
+\section{Related Work}
+
+Our research builds upon recent advancements in the mechanistic interpretability of Large Language Models (LLMs), specifically focusing on how safety and utility are represented internally. 
+
+\textbf{Vulnerability of Safety Alignment.} 
+Current methods for aligning LLMs to be safe rely heavily on behavioral fine-tuning \cite{zou2023gcg}. However, research has demonstrated that these surface-level guardrails are fundamentally brittle. By using adversarial prompt suffixes, safety filters can be bypassed entirely. This vulnerability strongly motivates our project; because behavioral filters can be easily tricked, we hypothesize that true safety alignment must be engineered at the mechanistic level within the model's internal representations.
+
+\textbf{The Linear Representation Hypothesis.} 
+The theoretical foundation of our approach is the Linear Representation Hypothesis (LRH) \cite{park2023LRH}. LRH suggests that high-level concepts occupy specific linear subspaces within a model's activation space. Previous work demonstrated that making causal interventions on these concept vectors predictably alters the generated text. Our project heavily relies on this methodology. We apply this geometric framework to test whether intervening on an isolated safety vector leaves the utility capabilities of the model untouched.
+
+\textbf{Refusal as a Single Direction.} 
+Investigating how safety mechanisms operate geometrically, recent studies discovered that an LLM's refusal behavior against malicious prompts is highly localized. Rather than being scattered across the network, refusal is mediated by a single, one-dimensional subspace \cite{arditi2024refusal}. This specific "refusal direction" can be successfully isolated using a Difference of Means (DoM) approach. We directly replicate this DoM methodology as our primary baseline to extract safety vectors and test their relationship to utility.
+
+\textbf{Subspaces and actSVD.} 
+Expanding on the geometry of safety, researchers have also mapped the broader representational footprint of these mechanisms \cite{wei2024brittleness}. Safety mechanisms actually occupy a remarkably sparse, low-rank subspace within the model. By applying Activation-aware Singular Value Decomposition (actSVD), it is possible to successfully separate safety-critical regions from utility-critical ones. We adopt this actSVD methodology as our second extraction technique. This allows us to compare the sparse subspace identified by actSVD against the single vector extracted via DoM, helping us robustly map the boundaries between safety and utility representations.
+
+\textbf{Safety Layers in Aligned LLMs.} 
+Finally, in addition to identifying specific directions and subspaces, recent investigations have localized safety mechanisms to specific "safety layers" within aligned LLMs \cite{li2025safety}. These layers act as primary filters for distinguishing between benign and malicious prompts. By targeting these specific layers for analysis and ablation, we can better understand where the safety-utility conflict is most intense during the model's forward pass.

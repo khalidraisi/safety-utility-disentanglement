@@ -1,0 +1,38 @@
+ActSVD analysis — gemma-3-4b-it
+r = 10, n_layers = 35
+
+=== OVERALL OVERLAP SCORES ===
+Min overlap : 0.0863 (layer 34)
+Max overlap : 1.0000 (layer 0)
+Mean overlap: 0.2568
+
+=== TOP PRINCIPAL-ANGLE COSINE ===
+Min: 0.6483 (layer 34)
+Max: 1.0000 (layer 0)
+
+=== SURVIVAL NORMS (after removing utility from safety) ===
+Mean across layers: 0.8316  (1.0 = fully orthogonal, 0.0 = fully entangled)
+Min layer mean    : 0.0000 (layer 0)
+Max layer mean    : 0.9553 (layer 34)
+
+=== LAYER GROUPS ===
+early  (0–10)       : mean overlap = 0.4561
+middle (11–21): mean overlap = 0.2046
+late   (22–34): mean overlap = 0.1323
+
+=== MOST SEPARATED LAYERS ===
+  layer 34: overlap = 0.0863
+  layer 32: overlap = 0.0919
+  layer 33: overlap = 0.0940
+  layer 31: overlap = 0.0996
+  layer 30: overlap = 0.1099
+
+=== MOST OVERLAPPING LAYERS ===
+  layer 1: overlap = 0.4309
+  layer 5: overlap = 0.4356
+  layer 3: overlap = 0.4546
+  layer 4: overlap = 0.4634
+  layer 0: overlap = 1.0000
+
+=== INTERPRETATION ===
+Safety and utility show MODERATE overlap (partial entanglement).

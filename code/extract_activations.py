@@ -55,15 +55,40 @@ def _gemma_4_family(prompt: str, tokenizer) -> str:
         chat,
         tokenize=False,
         add_generation_prompt=True,
-        enable_thinking=False, #we could try with reasoning models also?
+        enable_thinking=False,
+    )
+
+def _qwen_3_5_family(prompt: str, tokenizer) -> str:
+    '''
+    template for Qwen3.5-9B and Qwen3.5-4B
+    Qwen3.5 is multimodal and uses AutoProcessor.
+    '''
+    chat = [{"role": "user", "content": prompt}]
+    return tokenizer.apply_chat_template(
+        chat,
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=False,
+    )
+
+def _llama_3_family(prompt: str, tokenizer) -> str:
+    '''
+    template for Llama-3.2 Instruct models
+    '''
+    chat = [{"role": "user", "content": prompt}]
+    return tokenizer.apply_chat_template(
+        chat,
+        tokenize=False,
+        add_generation_prompt=True,
     )
  
 # template_name -> formatter function
-# add new entries here when supporting more model families
 TEMPLATES = {
     "none": _no_template,
     "gemma-3": _gemma_3_family,
     "gemma-4": _gemma_4_family,
+    "qwen-3-5": _qwen_3_5_family,
+    "llama-3": _llama_3_family,
 }
 
 def get_template(name: str):
@@ -130,10 +155,6 @@ def load_prompts(n=N):
     ]
     utility_prompts = list(dict.fromkeys(utility_prompts))
 
-    #add helpfulness=0
-
-    #add taking helpfulness 
-
     harmful_prompts = harmful_prompts[:n]
     harmless_prompts = harmless_prompts[:n]
     utility_prompts = utility_prompts[:n]
@@ -199,7 +220,7 @@ if __name__ == "__main__":
     args = parse_args()
     
     template_fn = get_template(args.template)
-    use_processor = args.template == "gemma-4"
+    use_processor = args.template in {"gemma-4", "qwen-3-5"}
 
  
     harmful_prompts, harmless_prompts, utility_prompts = load_prompts(n=args.n)

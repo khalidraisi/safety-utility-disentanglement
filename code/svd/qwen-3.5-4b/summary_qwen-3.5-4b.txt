@@ -1,0 +1,38 @@
+ActSVD analysis — qwen-3.5-4b
+r = 10, n_layers = 33
+
+=== OVERALL OVERLAP SCORES ===
+Min overlap : 0.0741 (layer 31)
+Max overlap : 1.0000 (layer 0)
+Mean overlap: 0.1792
+
+=== TOP PRINCIPAL-ANGLE COSINE ===
+Min: 0.5527 (layer 18)
+Max: 1.0000 (layer 0)
+
+=== SURVIVAL NORMS (after removing utility from safety) ===
+Mean across layers: 0.8878  (1.0 = fully orthogonal, 0.0 = fully entangled)
+Min layer mean    : 0.0000 (layer 0)
+Max layer mean    : 0.9620 (layer 31)
+
+=== LAYER GROUPS ===
+early  (0–10)       : mean overlap = 0.3427
+middle (11–21): mean overlap = 0.1003
+late   (22–32): mean overlap = 0.0945
+
+=== MOST SEPARATED LAYERS ===
+  layer 31: overlap = 0.0741
+  layer 32: overlap = 0.0747
+  layer 30: overlap = 0.0794
+  layer 17: overlap = 0.0803
+  layer 16: overlap = 0.0812
+
+=== MOST OVERLAPPING LAYERS ===
+  layer 4: overlap = 0.2502
+  layer 3: overlap = 0.4332
+  layer 2: overlap = 0.4610
+  layer 1: overlap = 0.4845
+  layer 0: overlap = 1.0000
+
+=== INTERPRETATION ===
+Safety and utility are largely ORTHOGONAL (independent).

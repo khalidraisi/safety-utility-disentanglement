@@ -1,0 +1,38 @@
+ActSVD analysis — llama-3.2-3b
+r = 10, n_layers = 29
+
+=== OVERALL OVERLAP SCORES ===
+Min overlap : 0.0408 (layer 28)
+Max overlap : 1.0000 (layer 0)
+Mean overlap: 0.1534
+
+=== TOP PRINCIPAL-ANGLE COSINE ===
+Min: 0.4903 (layer 28)
+Max: 1.0000 (layer 0)
+
+=== SURVIVAL NORMS (after removing utility from safety) ===
+Mean across layers: 0.9023  (1.0 = fully orthogonal, 0.0 = fully entangled)
+Min layer mean    : 0.0000 (layer 0)
+Max layer mean    : 0.9793 (layer 28)
+
+=== LAYER GROUPS ===
+early  (0–8)       : mean overlap = 0.2808
+middle (9–17): mean overlap = 0.1295
+late   (18–28): mean overlap = 0.0689
+
+=== MOST SEPARATED LAYERS ===
+  layer 28: overlap = 0.0408
+  layer 27: overlap = 0.0439
+  layer 26: overlap = 0.0574
+  layer 25: overlap = 0.0625
+  layer 24: overlap = 0.0686
+
+=== MOST OVERLAPPING LAYERS ===
+  layer 5: overlap = 0.1930
+  layer 3: overlap = 0.2033
+  layer 1: overlap = 0.2095
+  layer 2: overlap = 0.2264
+  layer 0: overlap = 1.0000
+
+=== INTERPRETATION ===
+Safety and utility are largely ORTHOGONAL (independent).

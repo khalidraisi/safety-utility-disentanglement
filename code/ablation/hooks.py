@@ -10,11 +10,35 @@
 import torch
 
 
+_BLOCK_PATHS = (
+    ("model", "layers"),                        # Llama, Qwen, Mistral, Gemma 2
+    ("model", "language_model", "layers"),      # Gemma 3 / 3n multimodal wrappers
+    ("language_model", "model", "layers"),      # some VLM wrappers
+    ("transformer", "h"),                       # GPT-2 style
+    ("gpt_neox", "layers"),                     # NeoX
+)
+
+
 def _get_blocks(model):
-    # works for HF Llama/Gemma/Mistral-style models
-    if hasattr(model, "model") and hasattr(model.model, "layers"):
-        return model.model.layers
-    raise AttributeError("could not find transformer blocks at model.model.layers")
+    for path in _BLOCK_PATHS:
+        obj = model
+        ok = True
+        for attr in path:
+            if not hasattr(obj, attr):
+                ok = False
+                break
+            obj = getattr(obj, attr)
+        if ok:
+            return obj
+    # last-resort search: any nn.ModuleList named "layers" anywhere in the tree
+    import torch.nn as nn
+    for name, mod in model.named_modules():
+        if name.endswith(".layers") and isinstance(mod, nn.ModuleList):
+            return mod
+    raise AttributeError(
+        "could not find transformer blocks; tried "
+        + ", ".join(".".join(("model",) + p) for p in _BLOCK_PATHS)
+    )
 
 
 def install_direction_ablation(model, layer_idx, v):

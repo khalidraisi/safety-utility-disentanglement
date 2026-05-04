@@ -1,0 +1,17 @@
+{
+  "model": "google/gemma-3-1b-it",
+  "suffix": "gemma3_1b",
+  "n_per_category": 50,
+  "best_safety_layer": 10,
+  "best_utility_layer": 18,
+  "safety_auroc_at_layer": 1.0,
+  "utility_auroc_at_layer": 0.7341125000000001,
+  "refusal_rates": {
+    "control__harmful": 0.98,
+    "control__helpful": 0.0,
+    "ablate_safety__harmful": 0.1,
+    "ablate_safety__helpful": 0.0,
+    "ablate_utility__harmful": 0.84,
+    "ablate_utility__helpful": 0.0
+  }
+}

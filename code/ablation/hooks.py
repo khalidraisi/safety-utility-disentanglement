@@ -61,3 +61,48 @@ def install_direction_ablation(model, layer_idx, v):
         return (h_new, *rest)
 
     return block.register_forward_hook(hook)
+
+
+def install_subspace_ablation(model, layer_idx, V):
+    """
+    Project out a rank-k subspace V from the residual stream output of
+    model.model.layers[layer_idx - 1].
+
+    V: tensor of shape (D, k) -- columns are basis vectors (need not be
+       orthonormal; we orthonormalize via QR).
+    """
+    if layer_idx < 1:
+        raise ValueError("layer_idx must be >= 1 (layer 0 is the embedding)")
+
+    blocks = _get_blocks(model)
+    block = blocks[layer_idx - 1]
+
+    V32 = V.detach().to(torch.float32)
+    if V32.dim() == 1:
+        V32 = V32.unsqueeze(-1)
+    # orthonormalize columns
+    Q, _ = torch.linalg.qr(V32, mode="reduced")  # (D, k)
+    state = {"Q": None}
+
+    def hook(_module, _inputs, output):
+        if isinstance(output, tuple):
+            h = output[0]
+            rest = output[1:]
+        else:
+            h = output
+            rest = None
+
+        if state["Q"] is None:
+            state["Q"] = Q.to(device=h.device, dtype=h.dtype)
+        Qd = state["Q"]  # (D, k)
+
+        # h: (B, T, D) -> coeffs (B, T, k) -> projection (B, T, D)
+        coeffs = h @ Qd                # (B, T, k)
+        proj = coeffs @ Qd.transpose(-1, -2)   # (B, T, D)
+        h_new = h - proj
+
+        if rest is None:
+            return h_new
+        return (h_new, *rest)
+
+    return block.register_forward_hook(hook)

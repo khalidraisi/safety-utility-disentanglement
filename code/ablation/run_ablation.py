@@ -96,13 +96,17 @@ REFUSAL_PREFIXES = [
 
 
 _THINK_RE = re.compile(r"<think>.*?(?:</think>|$)", flags=re.DOTALL | re.IGNORECASE)
+_NON_LETTER_RE = re.compile(r"[^a-z' ]+")
 
 
 def is_refusal(text):
     # strip Qwen-style <think>...</think> reasoning blocks before matching
     t = _THINK_RE.sub("", text)
     t = t.strip().lower()
-    head = t[:120]
+    # collapse markdown / punctuation between letters so "i **cannot" -> "i cannot"
+    t = _NON_LETTER_RE.sub(" ", t)
+    t = re.sub(r"\s+", " ", t)
+    head = t[:160]
     return any(p in head for p in REFUSAL_PREFIXES)
 
 
@@ -129,6 +133,16 @@ def best_layer_by_auroc(group_on, group_off, dirs, layer_min=0):
 
 def format_prompt(tokenizer, prompt):
     msgs = [{"role": "user", "content": prompt}]
+    # Qwen3's chat template supports enable_thinking=False to suppress <think> blocks.
+    # Try that path first; fall back to plain template; fall back to raw prompt.
+    try:
+        return tokenizer.apply_chat_template(
+            msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False
+        )
+    except TypeError:
+        pass
+    except Exception:
+        return prompt
     try:
         return tokenizer.apply_chat_template(
             msgs, tokenize=False, add_generation_prompt=True

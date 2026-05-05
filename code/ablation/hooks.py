@@ -76,27 +76,26 @@ class _DirHolder:
 
 
 @contextmanager
-def projection_ablation(model, directions, start_block_idx):
+def projection_ablation(model, directions, block_idx):
     """
+    Project the given directions out of the residual stream at a single block.
+
     directions: numpy array (k, D) or list of (D,) arrays. Will be unit-normalized.
-    start_block_idx: 1-indexed against hidden_states (0 = embedding).
-                     Hooks attach to blocks[start_block_idx - 1 .. end].
+    block_idx: 1-indexed against hidden_states (0 = embedding).
+               Hook attaches to blocks[block_idx - 1].
     """
     if directions is None or len(directions) == 0:
         yield
         return
 
     blocks = _get_blocks(model)
-    if start_block_idx < 1 or start_block_idx > len(blocks):
-        raise ValueError(f"start_block_idx {start_block_idx} out of range [1, {len(blocks)}]")
+    if block_idx < 1 or block_idx > len(blocks):
+        raise ValueError(f"block_idx {block_idx} out of range [1, {len(blocks)}]")
 
     holder = _DirHolder(directions)
     hook_fn = _make_hook(holder)
-    handles = []
+    handle = blocks[block_idx - 1].register_forward_hook(hook_fn)
     try:
-        for i in range(start_block_idx - 1, len(blocks)):
-            handles.append(blocks[i].register_forward_hook(hook_fn))
         yield
     finally:
-        for h in handles:
-            h.remove()
+        handle.remove()

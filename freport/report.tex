@@ -22,9 +22,8 @@
 % and will typically save some space.
 \usepackage{microtype}
 
-% This is also not strictly necessary, and may be commented out.
-% However, it will improve the aesthetics of text in
-% the typewriter font.
+% BasicTeX omits this package; install once with:
+%   sudo tlmgr install inconsolata
 \usepackage{inconsolata}
 
 %Including images in your LaTeX document requires adding
@@ -64,12 +63,15 @@
     \href{mailto:vsaravanan@wisc.edu}{\texttt{vsaravanan}},
     \href{mailto:bwu255@wisc.edu}{\texttt{bwu255}},
     \href{mailto:zchehime@wisc.edu}{\texttt{zchehime}},
-    \href{mailto:wjfrost2@wisc.edu}{\texttt{wjfrost2}}
+    \href{mailto:wjfoster2@wisc.edu}{\texttt{wjfoster2}}
     \texttt{@wisc.edu}
   }
 }
 
 \begin{document}
+\frenchspacing
+% Reduce overstretched word spaces in justified text (lists and narrow blocks).
+\setlength{\emergencystretch}{3em}
 \maketitle
 
 \input{chapters/abstract}
@@ -89,7 +91,6 @@
 %\bibliography{custom,anthology-overleaf-1,anthology-overleaf-2}
 
 % Custom bibliography entries only
-\bibstyle{acl}
 \bibliography{custom}
 \appendix
 \input{chapters/appendix}

@@ -1,2 +1,31 @@
 \section{Introduction}
-a
+
+Large language models (LLMs) must refuse harmful requests yet remain helpful on benign tasks.
+Behavioral alignment is fragile: adversarial prompts can bypass safety filters without collapsing general competence \cite{zou2023gcg}.
+That contrast suggests a representational question: do safety and ordinary task performance depend on the same internal features, or can they be separated enough for targeted steering?
+If both behaviors share a bottleneck, improving refusal may disturb instruction following, and the reverse may also hold; if they occupy largely non-overlapping structure, projection-style interventions become more plausible than wholesale retraining.
+
+We approach the question through mechanistic interpretability and geometry.
+Under the Linear Representation Hypothesis (LRH), concepts often correspond to directions or low-dimensional subspaces in residual-stream activations \cite{park2023LRH}.
+We operationalize \emph{safety} and \emph{utility} as vectors or subspaces estimated from contrastive prompts and ask whether they are \emph{disentangled}, in the sense of low directional overlap or small subspace overlap at a fixed depth, rather than entangled.
+Throughout, disentanglement denotes a linear geometric claim under fixed data conditions; establishing full causal separability still requires interventions beyond these statistics.
+
+Recent work already localizes safety in activation space.
+Difference-of-means (DoM) directions capture much refusal variation \cite{arditi2024refusal}; activation-aware SVD (actSVD) surfaces sparse low-rank safety structure \cite{wei2024brittleness}; and some layers disproportionately separate benign from malicious inputs \cite{li2025safety}.
+How these summaries relate to representations of everyday helpfulness across depth remains comparatively open.
+We therefore combine one-dimensional DoM summaries with richer actSVD subspaces, reflecting different granularities emphasized in prior safety work, and study safety and utility together.
+
+We extract hidden states from instruction-tuned checkpoints spanning Gemma, Llama, Qwen, and Phi model families.
+Exact checkpoints appear in Methods.
+Contrasts use AdvBench (harmful prompts), Alpaca (broad benign instructions), and HelpSteer (human helpfulness ratings) \cite{wang-etal-2024-helpsteer}.
+Layer by layer we report cosine similarity between DoM directions and overlap and principal-angle measures between actSVD subspaces.
+Hook-based ablations and refusal-focused benchmarks complement geometry on selected setups so overlap statistics can be read next to behavioral change rather than in isolation.
+
+\paragraph{Contributions.}
+\begin{itemize}
+  \item We formulate safety-utility disentanglement in activation space and relate it to refusal-direction, actSVD, and safety-layer analyses \cite{arditi2024refusal,wei2024brittleness,li2025safety}.
+  \item We provide a reproducible layer-wise pipeline for DoM directions and actSVD subspaces across multiple aligned models and standard contrastive datasets.
+  \item We combine cross-model layer-wise geometry with ablation-backed behavioral checks where available and sketch extensions toward fuller causal interventions.
+\end{itemize}
+
+The remainder of the report reviews related work, then presents methods, experiments, results, limitations, and discussion.

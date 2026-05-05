@@ -1,2 +1,11 @@
-\section{Abstract}
-a
+\begin{abstract}
+Aligned large language models must refuse harmful instructions while remaining helpful on benign tasks.
+Yet behavioral guardrails can fail under adversarial prompts without obvious capability collapse, which motivates asking whether safety and helpfulness rely on shared or separable structure inside the network.
+We study this question under the Linear Representation Hypothesis.
+From residual-stream activations and contrastive prompts, we estimate safety-aligned and utility-aligned geometry using difference-of-means directions and activation-aware SVD subspaces, pairing refusal-vector-style summaries with richer low-rank subspace analyses emphasized in prior safety work.
+We apply the same joint safety-utility comparison across several instruction-tuned checkpoints spanning multiple model families, including Gemma, Llama, Qwen, and Phi variants.
+Anchors are AdvBench (harmful), Alpaca (benign breadth), and HelpSteer (human helpfulness contrasts).
+Layer by layer we report cosine similarity between DoM directions, plus subspace overlap and principal-angle summaries from actSVD.
+Selected setups additionally combine these geometric statistics with activation ablations and refusal-focused evaluation so internal overlap can be read alongside behavioral change.
+We summarize cross-model patterns, connect them to localized refusal and safety-subspace evidence in the literature, and discuss limitations and next steps toward causal interventions.
+\end{abstract}

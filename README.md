@@ -74,6 +74,6 @@ Requires Python 3.10+
 ├── results/            # Aggregated experiment outputs
 ├── mreport.pdf         # Milestone report
 └── freport.pdf         # Final report
+```
 
 Find the extracted activations [here](https://drive.google.com/drive/folders/1kUK2QM1RxWK4J2mQQNQGo1SaMWzvjtNI?usp=drive_link)
-```

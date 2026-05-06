@@ -20,7 +20,7 @@ We then test whether these subspaces are orthogonal and causally independent via
 
 ## Models
 
-- `google/gemma3 1b it`
+- Gemma3 1b it
 - Gemma4 E2B it
 - Llama3.2-3b it
 - Qwen3.5-4b it
@@ -56,7 +56,6 @@ Requires Python 3.10+
 ├── code/
 │   ├── EDA/            # Exploratory data analysis and PCA visualization
 │   ├── ablation/       # Safety and utility ablation
-│   ├── activations/    # Activation extractions
 │   ├── dom/            # Difference-of-Means direction
 │   ├── locatelayers/   # Layer selection and similarity analysis
 │   ├── output/         # Experimental results and figures
@@ -73,5 +72,8 @@ Requires Python 3.10+
 │   └── acl_natbib.bst
 ├── mreport/            # Milestone report source files
 ├── results/            # Aggregated experiment outputs
-└── mreport.pdf         # Milestone report
+├── mreport.pdf         # Milestone report
+└── freport.pdf         # Final report
+
+Find the extracted activations [here](https://drive.google.com/drive/folders/1kUK2QM1RxWK4J2mQQNQGo1SaMWzvjtNI?usp=drive_link)
 ```

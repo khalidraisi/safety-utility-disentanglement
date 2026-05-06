@@ -20,9 +20,10 @@ We then test whether these subspaces are orthogonal and causally independent via
 
 ## Models
 
-- `google/gemma-3-1b-it`
-- Gemma-2B-IT, Gemma-7B-IT
-- Llama-2-7B-Chat, Llama-3-8B-Instruct
+- `google/gemma3 1b it`
+- Gemma4 E2B it
+- Llama3.2-3b it
+- Qwen3.5-4b it
 
 ---
 
@@ -32,7 +33,7 @@ We then test whether these subspaces are orthogonal and causally independent via
 |---|---|
 | [AdvBench](https://github.com/llm-attacks/llm-attacks) | Harmful prompts (safety pole) |
 | [Alpaca](https://huggingface.co/datasets/tatsu-lab/alpaca) | Harmless instructions |
-| [HelpSteer2](https://huggingface.co/datasets/nvidia/HelpSteer2) | High/low utility prompts |
+| [HelpSteer](https://huggingface.co/datasets/nvidia/HelpSteer) | High/low utility prompts |
 
 ---
 
@@ -59,8 +60,17 @@ Requires Python 3.10+
 │   ├── dom/            # Difference-of-Means direction
 │   ├── locatelayers/   # Layer selection and similarity analysis
 │   ├── output/         # Experimental results and figures
-│   └── svd/            # actSVD subspace extraction
-├── freport/            # Final report source files
+│   ├── svd/            # actSVD subspace extraction
+│   └── extract_activations.py    # Main script for extracting model hidden states
+├── freport/            # Final report
+│   ├── chapters/       # Individual report chapters
+│   ├── report.tex      # Main LaTeX source
+│   ├── report.pdf      # Compiled final report
+│   ├── custom.bib      # Bibliography
+│   ├── anthology.bib.txt
+│   ├── acl_latex.tex
+│   ├── acl.sty
+│   └── acl_natbib.bst
 ├── mreport/            # Milestone report source files
 ├── results/            # Aggregated experiment outputs
 └── mreport.pdf         # Milestone report

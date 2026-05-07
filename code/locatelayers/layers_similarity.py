@@ -4,7 +4,7 @@
 #utility layers
 
 # for our cases
-# anchor = Alpaca always (for now at least)
+# anchor = Alpaca always
 # contrast = Helpsteer/Advbench for unsafe and helpful respectively
 # use codes N-M (normal/malicious) and N-H (normal/helpful)
 
@@ -12,7 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-R = 500
+R = 1000
 
 def layer_cosine_sim(act1, act2, eps=1e-12):
     '''
@@ -178,10 +178,61 @@ def angular_diffs_analysis(
 
     return gaps.mean(axis=0), gaps.std(axis=0)
 
-# plot
+def get_angular_diffs_plot(
+    anchor_acts,
+    contrast_acts,
+    r=R,
+    anchor_label="anchor",
+    contrast_label="contrast",
+    anchor_code=None,
+    contrast_code=None,
+    model_name=None,
+    save_path=None,
+):
+    '''
+    plots layer-wise angular differences between cross-set angle
+    (anchor vs contrast) and within-anchor angle (anchor vs anchor).
+    positive values mean anchor and contrast are further apart than
+    anchors are amongst themselves at that layer
+    '''
+    mean, std = angular_diffs_analysis(
+        anchor_acts, contrast_acts, r=r,
+        anchor_label=anchor_label, contrast_label=contrast_label,
+    )
 
+    a_code = anchor_code or anchor_label[0].upper()
+    c_code = contrast_code or contrast_label[0].upper()
+    if a_code == c_code and anchor_code is None and contrast_code is None:
+        a_code = anchor_label[:2].capitalize()
+        c_code = contrast_label[:2].capitalize()
 
+    layers = np.arange(len(mean))
+    layer_labels = [str(i) for i in layers]
 
-# this is for section 3.4 (Not implemented yet, figure this out later), 
-# it seems a little more complicated and some things would probably need to be 
-# written within the experiments
+    title = f"Layer-wise Angular Difference: {anchor_label} vs {contrast_label} ({a_code}-{c_code})"
+    if model_name:
+        title = f"{model_name} — {title}"
+
+    fig, ax = plt.subplots(figsize=(12, 5))
+    ax.plot(
+        layers, mean, color="tab:purple", linewidth=2,
+        label=f"angle({a_code},{c_code}) − angle({a_code},{a_code})",
+    )
+    ax.fill_between(
+        layers, mean - std, mean + std, color="tab:purple", alpha=0.2,
+    )
+    ax.axhline(0, color="black", linewidth=0.8, linestyle="--", alpha=0.5)
+    ax.set_xlabel("Layer (Layer 0 is the embedding layer)")
+    ax.set_ylabel("Angular Difference (degrees)")
+    ax.set_title(title)
+    ax.set_xticks(layers)
+    ax.set_xticklabels(layer_labels, rotation=90, fontsize=7)
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+
+    plt.tight_layout()
+    if save_path is not None:
+        plt.savefig(save_path, dpi=300, bbox_inches="tight")
+    plt.show()
+
+    return mean, std

@@ -21,6 +21,7 @@ We then test whether these subspaces are orthogonal and causally independent via
 ## Models
 
 - Gemma3 1b it
+- Gemma 3 4b it
 - Gemma4 E2B it
 - Llama3.2-3b it
 - Qwen3.5-4b it
@@ -58,7 +59,6 @@ Requires Python 3.10+
 │   ├── ablation/       # Safety and utility ablation
 │   ├── dom/            # Difference-of-Means direction
 │   ├── locatelayers/   # Layer selection and similarity analysis
-│   ├── output/         # Experimental results and figures
 │   ├── svd/            # actSVD subspace extraction
 │   └── extract_activations.py    # Main script for extracting model hidden states
 ├── freport/            # Final report

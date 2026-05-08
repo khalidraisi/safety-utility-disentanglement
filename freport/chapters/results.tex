@@ -76,7 +76,7 @@ Ranking the five models from most to least orthogonal under
 ActSVD (by mean overlap): Llama-3.2-3B (0.15), Qwen-3.5-4B (0.18),
 Gemma-4-E2B (0.20), Gemma-3-4B (0.26), and Gemma-3-1B (0.28).
 
-\section{DoM and ActSVD: Agreement}
+\subsection{DoM and ActSVD: Agreement}
 \label{sec:results-synthesis}
 The two methods agree qualitatively. DoM finds safety and utility
 directions whose mean cosine is small in either sign across layers,
@@ -89,7 +89,7 @@ cleanest separation under both methods, while the two Gemma-3
 checkpoints show the most residual entanglement. Both methods
 identify the late layers as the cleanest candidates for
 projection-style intervention, motivating the ablation experiments
-in Section~\ref{sec:ablation}.
+in Section~\ref{sec:Causal Ablations}.
 
 
 \subsection{Causal Ablations}
@@ -153,4 +153,4 @@ has causal force: safety and utility are encoded along directions that
 can be surgically targeted without collateral damage to the other
 behavior.
 
-\subsection{Cross-Model Comparison}
+\label{sec:Causal Ablations}

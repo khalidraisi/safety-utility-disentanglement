@@ -87,3 +87,45 @@ and geometrically separated from the complementary one.
 
 
 \subsection{Subspace Ablations}
+To test whether the geometric findings have causal force, we
+intervene on the residual stream during generation and measure
+behavioral change. We register a forward hook on a single
+transformer block that, at every token position during both
+prefill and decoding, projects out one or more unit directions $v$
+from the hidden state via $h \leftarrow h - (h \cdot v)\, v$. The
+hook acts only at the specified block; downstream blocks may
+re-introduce the direction, but our analysis targets the layer
+that maximizes separability rather than network-wide ablation.
+
+The ablation layer is selected per direction by AUROC. For each
+layer $n$ we project held-out activations onto the unit-normalized
+DoM direction $v^{(n)}_{\text{safety}}$ and compute the AUROC of
+the resulting scalar for distinguishing harmful from harmless
+prompts; the layer maximizing this AUROC is the safety ablation
+site $L_{\text{safety}}$. The utility ablation site
+$L_{\text{utility}}$ is selected analogously using the
+utility-versus-harmless contrast. Layer 0 (embedding) and the
+final block are excluded from the search to avoid degenerate
+picks.
+
+We compare five conditions: (i) \emph{baseline} (no
+intervention); (ii) \emph{ablate-safety}, projecting out
+$v_{\text{safety}}$ at $L_{\text{safety}}$; (iii) \emph{ablate-
+utility}, projecting out $v_{\text{utility}}$ at $L_{\text{utility}}$;
+(iv) \emph{ablate-both}, applying both hooks simultaneously; and
+(v) \emph{ablate-random}, a control that projects out a random
+unit vector at $L_{\text{safety}}$. The random condition matches
+the scope of the safety intervention, so any behavioral change
+attributable to ``loss of one direction'' should appear here too;
+differences between ablate-safety and ablate-random isolate the
+content of the safety direction from the act of projection itself.
+
+We evaluate each condition on two benchmarks. AdvBench measures
+safety: we generate a short continuation for each harmful prompt
+and compute the refusal rate. HelpSteer measures utility: we
+generate longer responses for held-out prompts and score each on
+a 1--5 helpfulness scale using GPT as a judge. Together these
+benchmarks let us read causal independence directly --- ablating
+safety should drop AdvBench refusal rate while leaving HelpSteer
+helpfulness near baseline if the two behaviors are causally
+separable, and the reverse for utility ablation.

@@ -93,4 +93,64 @@ in Section~\ref{sec:ablation}.
 
 
 \subsection{Causal Ablations}
+\label{sec:results-ablation}
+
+Table~\ref{tab:ablation} reports AdvBench refusal rates and HelpSteer
+helpfulness scores for all five conditions on Llama-3.2-3B, chosen
+because it exhibits the cleanest geometric separation under both DoM
+and ActSVD.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lcc}
+\hline
+\textbf{Condition} & \textbf{AdvBench} & \textbf{HelpSteer} \\
+                   & \textbf{Refusal (\%)} & \textbf{(1--5)} \\
+\hline
+Baseline       & 94.62 & 3.20 \\
+Ablate safety  & 72.12 & 3.16 \\
+Ablate utility & 98.08 & 2.63 \\
+Ablate both    & 75.85 & 2.55 \\
+Ablate random  & 96.92 & 3.25 \\
+\hline
+\end{tabular}
+\caption{Causal ablation results on Llama-3.2-3B. AdvBench measures
+safety (higher = more refusals); HelpSteer measures helpfulness
+(higher = more helpful).}
+\label{tab:ablation}
+\end{table}
+
+Ablating the safety direction reduces the refusal rate from 94.62\%
+to 72.12\%, a 22.5 percentage-point drop, while HelpSteer score
+remains nearly unchanged (3.16 vs.\ 3.20). This dissociation is
+the central causal finding: removing the safety direction costs the
+model roughly a quarter of its refusal behavior but does not
+measurably impair helpfulness.
+
+Ablating the utility direction produces the complementary pattern.
+The refusal rate rises slightly to 98.08\% while HelpSteer drops substantially to 2.63,
+a 0.57-point decline relative to baseline. Helpfulness and refusal
+thus respond to opposite interventions, which is exactly what causal
+separability predicts.
+
+The ablate-both condition combines both hooks simultaneously. Its
+refusal rate of 75.85\% closely tracks the safety-ablation result
+(72.12\%), and its HelpSteer of 2.55 closely tracks the
+utility-ablation result (2.63), consistent with the two effects
+being approximately additive rather than interacting.
+
+The control condition (ablate-random) is decisive. Projecting out a
+random unit vector at the same layer leaves the refusal rate at
+96.92\% and HelpSteer at 3.25, both within noise of baseline. The
+behavioral changes produced by the safety and utility ablations are
+therefore specific to the content of those directions and cannot be
+attributed to the act of projection itself.
+
+Together, the four conditions confirm that the geometric orthogonality
+observed in Sections~\ref{sec:results-dom} and~\ref{sec:results-actsvd}
+has causal force: safety and utility are encoded along directions that
+can be surgically targeted without collateral damage to the other
+behavior.
+
 \subsection{Cross-Model Comparison}

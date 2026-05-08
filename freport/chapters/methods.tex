@@ -1,11 +1,89 @@
 \section{Methods}
-For all prompts $p \in P$ where $P$ represents any one of the three datasets, we apply the model's chat template, 
-then run a forward pass and save the activation at the final token of every transformer
-block. This gives us a set of matrices $A_n \in \mathbb{R}^{|P| \times d}$ where $n$ is the layer's number, and $n=0$
-represents the embedding layer. The direction/subspace extraction methods discussed in
-the following sections all rely on this extracted matrix $A_n$.
+
+We work with three datasets corresponding to three behavioral
+categories: Alpaca \cite{alpaca} (harmless instructions),
+AdvBench \cite{zou2023gcg} (harmful prompts), and the
+helpfulness-rated-4 subset of HelpSteer
+\cite{wang-etal-2024-helpsteer} (utility prompts). For each
+prompt $p \in P$ in any of these three sets, we apply the model's
+chat template, run a forward pass, and save the activation at the
+final token of every transformer block. This gives a set of
+matrices $A_n \in \mathbb{R}^{|P| \times d}$ where $n$ indexes the
+layer ($n=0$ is the embedding). The direction and subspace
+extraction methods below all operate on these $A_n$.
+
+
 \subsection{Difference of Means (DoM)}
+Following Arditi et al.~\cite{arditi2024refusal}, we summarize each
+behavior at layer $n$ as a single direction. Let
+$\mu^{(n)}_{\text{harmless}}$, $\mu^{(n)}_{\text{harmful}}$, and
+$\mu^{(n)}_{\text{utility}}$ denote the column means of $A_n$ over
+harmless prompts (Alpaca), harmful prompts (AdvBench), and utility
+prompts (the HelpSteer rated-helpfulness-4 subset) respectively.
+We define the safety and utility directions as
+\[
+v^{(n)}_{\text{safety}} = \mu^{(n)}_{\text{harmful (AdvBench)}}
+                          - \mu^{(n)}_{\text{harmless (Alpaca)}},
+\]
+\[
+v^{(n)}_{\text{utility}} = \mu^{(n)}_{\text{utility (HelpSteer)}}
+                          - \mu^{(n)}_{\text{harmless (Alpaca)}},
+\]
+and quantify entanglement at depth $n$ via the cosine similarity
+between them. We retain the sign of the cosine: a value near zero
+indicates orthogonality, while strongly positive or strongly
+negative values indicate that safety and utility are encoded along
+the same or opposing axes.
+
+To distinguish the observed cosines from what would be expected
+under no relationship between the two directions, we run a
+permutation test at each layer. We pool all harmful (AdvBench) and
+utility (HelpSteer) prompts and resample two random groups of
+equal size from this pool 1000 times, computing the cosine between
+random ``safety-like'' and ``utility-like'' directions for each
+draw. The mean and central 95\% interval of this null distribution
+are overlaid on every reported cosine curve.
+
+
 \subsection{Activation Aware SVD (ActSVD)}
+DoM compresses each behavior to a single direction. ActSVD,
+following Wei et al.~\cite{wei2024brittleness}, generalizes this
+to a rank-$r$ subspace. We mean-center each activation matrix
+using the harmless baseline drawn from Alpaca,
+\[
+D^{(n)}_{\text{safety}} = A_n^{\text{AdvBench}}
+   - \mathbf{1}\,\mu^{(n)}_{\text{Alpaca}}{}^{\!\top},
+\]
+\[
+D^{(n)}_{\text{utility}} = A_n^{\text{HelpSteer}}
+   - \mathbf{1}\,\mu^{(n)}_{\text{Alpaca}}{}^{\!\top},
+\]
+and take the top-$r$ left singular vectors of each as orthonormal
+bases $U^{(n)}_{s},\, U^{(n)}_{u} \in \mathbb{R}^{d \times r}$. We
+fix $r=10$ throughout. Subspace entanglement is summarized by the
+mean squared cosine of principal angles,
+$\frac{1}{r}\sum_{i} \cos^2 \theta_i$, computed from the singular
+values of $U^{(n)\top}_{s} U^{(n)}_{u}$. The score lies in $[0,1]$,
+where $0$ indicates orthogonal subspaces and $1$ indicates
+identical subspaces. We additionally report the largest
+principal-angle cosine $\cos \theta_1$ to expose any single shared
+direction that the average might mask.
+
 \subsection{Contrastive SVD}
+
+
 \subsection{Locating Safety and Utility Layers}
+The geometric measures above produce one score per layer per
+model. To identify which layers most cleanly separate the two
+behaviors, we rank layers by two criteria. For separability
+under DoM, we project held-out activations onto the per-layer
+direction $v^{(n)}$ and compute the AUROC of the resulting scalar
+for distinguishing the contrast pair (harmful vs.\ harmless for
+safety, utility vs.\ harmless for utility). For ActSVD, we use
+the inverse of the per-layer subspace overlap score, so that
+lower overlap maps to higher separation. Layers ranked highly by
+both criteria are simultaneously predictive of the target behavior
+and geometrically separated from the complementary one.
+
+
 \subsection{Subspace Ablations}

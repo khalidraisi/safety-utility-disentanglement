@@ -1,2 +1,10 @@
 \section{Methods}
-a
+For all prompts $p \in P$ where $P$ represents any one of the three datasets, we apply the model's chat template, 
+then run a forward pass and save the activation at the final token of every transformer
+block. This gives us a set of matrices $A_n \in \mathbb{R}^{|P| \times d}$ where $n$ is the layer's number, and $n=0$
+represents the embedding layer. The direction/subspace extraction methods discussed in
+the following sections all rely on this extracted matrix $A_n$.
+\subsection{Difference of Means (DoM)}
+\subsection{Activation Aware SVD (ActSVD)}
+\subsection{Contrastive SVD}
+\subsection{Subspace Ablations}

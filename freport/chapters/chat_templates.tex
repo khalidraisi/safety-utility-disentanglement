@@ -1,0 +1,23 @@
+\section{Chat Templates}
+For all models we use the standard templates that are found on the respective model's 
+HuggingFace page.
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{ll}
+\hline
+\textbf{Model Family} & \textbf{Chat Template} \\
+\hline
+Gemma 3 & \texttt{<start\_of\_turn>user\textbackslash n\{x\}<end\_of\_turn>\textbackslash n<start\_of\_turn>model\textbackslash n} \\
+Gemma 4 & \texttt{<|turn>user\textbackslash n\{x\}<turn|>\textbackslash n<|turn>model\textbackslash n}$^*$ \\
+Llama 3 & \begin{tabular}[t]{@{}l@{}}
+\texttt{<|start\_header\_id|>user<|end\_header\_id|>\textbackslash n\textbackslash n\{x\}<|eot\_id|>}\\
+\texttt{<|start\_header\_id|>assistant<|end\_header\_id|>\textbackslash n\textbackslash n}
+\end{tabular} \\
+Qwen 3.5 & \texttt{<|im\_start|>user\textbackslash n\{x\}<|im\_end|>\textbackslash n<|im\_start|>assistant\textbackslash n}$^*$ \\
+\hline
+\multicolumn{2}{l}{\footnotesize $^*$\texttt{Note: enable\_thinking=False} is set when applicable.} \\
+\end{tabular}
+\caption{Chat templates used per model family.}
+\label{tab:chat_templates}
+\end{table}

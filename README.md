@@ -24,7 +24,7 @@ We then test whether these subspaces are orthogonal and causally independent via
 - Gemma 3 4b it
 - Gemma4 E2B it
 - Llama3.2-3b it
-- Qwen3.5-4b it
+- Qwen3.5-4b
 
 ---
 

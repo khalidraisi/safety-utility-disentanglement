@@ -31,7 +31,6 @@ def _no_template(prompt: str, tokenizer) -> str:
     print("Note: you may have mispelled something or this model activations extraction is not supported currently\n")
     return prompt
  
- 
 def _gemma_3_family(prompt: str, tokenizer) -> str:
     '''
     gemma3-it models chat template (gemma-3-1b-itand gemma-3-4b-it)

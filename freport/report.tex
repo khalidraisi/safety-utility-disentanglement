@@ -29,7 +29,7 @@
 %Including images in your LaTeX document requires adding
 %additional package(s)
 \usepackage{graphicx}
-
+\usepackage{tcolorbox}
 \usepackage{natbib}
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -43,7 +43,7 @@
 %
 % and set <dim> to something 5cm or larger.
 
-\title{Geometry of Safety and Utility in Activation Spaces of Aligned Large Language Models}
+\title{Disentangling Safety and Utility in Activation Spaces of Aligned Large Language Models}
 
 \author{
   \textbf{Khalid Al-Raisi\textsuperscript{1}},
@@ -77,13 +77,11 @@
 \input{chapters/abstract}
 \input{chapters/introduction}
 \input{chapters/related_work}
-\input{chapters/methods}
-\input{chapters/experiments}
+\input{chapters/methods.tex}
+\input{chapters/experiments.tex}
 \input{chapters/results}
-\input{chapters/limitations}
 \input{chapters/discussion_and_conclusion}
 \input{chapters/contribution_statement}
-
 
 
 
@@ -92,7 +90,13 @@
 
 % Custom bibliography entries only
 \bibliography{custom}
+
 \appendix
-\input{chapters/appendix}
+\input{chapters/figures.tex}
+\onecolumn
+\input{chapters/proof.tex}
+\input{chapters/dataset.tex}
+\input{chapters/evaluations.tex}
+\input{chapters/chat_templates.tex}
 
 \end{document}

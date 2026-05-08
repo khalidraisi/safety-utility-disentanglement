@@ -1,12 +1,6 @@
+% chapters/figures.tex
 \section{Figures}
 \label{sec:figures}
-
-This appendix collects the per-model geometric plots referenced in
-the Results section. Section~\ref{sec:figures-dom} shows DoM cosine
-curves with their permutation-test null bands.
-Section~\ref{sec:figures-actsvd} shows ActSVD and contrastive-SVD
-subspace overlap.
-
 
 \subsection{DoM cosine similarities}
 \label{sec:figures-dom}
@@ -93,4 +87,28 @@ subspace overlap.
 
 \begin{figure}[h]
     \centering
-    \includegra
+    \includegraphics[width=0.95\linewidth]{../images/overlap_llama-3.2-3b.png}
+    \caption{ActSVD subspace overlap --- Llama-3.2-3B-Instruct.}
+    \label{fig:actsvd-llama3-3b}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_llama-3.2-3b.png}
+    \caption{Contrastive SVD subspace overlap --- Llama-3.2-3B-Instruct.}
+    \label{fig:csvd-llama3-3b}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\linewidth]{../images/overlap_qwen-3.5-4b.png}
+    \caption{ActSVD subspace overlap --- Qwen-3.5-4B.}
+    \label{fig:actsvd-qwen35-4b}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_qwen-3.5-4b.png}
+    \caption{Contrastive SVD subspace overlap --- Qwen-3.5-4B.}
+    \label{fig:csvd-qwen35-4b}
+\end{figure}

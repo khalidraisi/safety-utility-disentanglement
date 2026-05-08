@@ -1,4 +1,57 @@
 \section{Experimental Setup}
+We run 500 prompts from each dataset, then run a forward pass, obtain the activations
+and then perform our experiments and analysis (DoM, ActSVD, Contrastive SVD and LocateLayers).
+Finally we ablate and examine the post ablation performance. In this section we discuss
+our datasets and models.
 \subsection{Models}
+We experiment on five instruction-tuned models covering four distinct
+architectural designs: Gemma 3 \citep{gemma_2025}, Gemma 4
+\citep{gemma4}, Llama 3.2 \citep{grattafiori2024llama3herdmodels}, and
+Qwen 3.5 \citep{qwen3.5}. 
+Gemma 3 and Gemma 4 use hybrid local/global
+attention transformers, and Gemma 4 introduces
+Per-Layer Embeddings on top of that. Further, Llama 3.2 is a standard decoder-only transformer
+with grouped-query attention, and Qwen 3.5 uses a hybrid architecture
+interleaving linear attention with full attention.
+Table~\ref{tab:models} summarizes the models we evaluate. information about the used
+chat templates can be found in section \ref{app:Templates} of the appendix.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lrrr}
+\hline
+Model & Params & $d$ & $L$ \\
+\hline
+Gemma-3-1B-IT          & 1B & 1152 & 26 \\
+Gemma-3-4B-IT          & 4B & 2560 & 34 \\
+Gemma-4-E2B-IT         & 2B & 1536 & 35 \\
+Llama-3.2-3B-Instruct  & 3B & 3072 & 28 \\
+Qwen-3.5-4B            & 4B & 2560 & 32 \\
+\hline
+\end{tabular}
+\caption{Models evaluated. $d$ is the hidden dimension; $L$ is the number of transformer blocks.}
+\label{tab:models}
+\end{table}
 \subsection{Datasets}
+We would like to obtain directions for refusal and useful behaviour, to do this we use
+AdvBench \citep{zou2023gcg} and Helpsteer \citep{wang-etal-2024-helpsteer}. 
+For AdvBench we simply pick the first 500 prompts, to then use to induce refusal behaviour.
+We use Helpsteer, but we filter to get 500 prompts with the maximum helpfulness score. 
+Finally, we Alpaca \citep{alpaca} where we also pick the first 500 prompts, this is just 
+done in order to have a certain baseline for the model's behaviour on average. Further
+details about the prompts can be found in part \ref{app:datasets} of the appendix.
 \subsection{Evaluations}
+We evaluate the extracted directions and subspaces along three axes.
+\textbf{Geometric metrics} (cosine similarity for DoM directions and
+principal angles for ActSVD and Contrastive SVD subspaces) are
+reported per layer to characterize the relationship between safety
+and utility, with a permutation null (1000 iterations of shuffled
+labels) accompanying the cosine similarities.
+\textbf{Layer selection} picks the safety and utility layers by class-separability AUROC, projecting
+activations onto the candidate direction and computing AUROC against
+the relevant binary label. Behavioral metrics measure the effect of
+ablation through refusal rate on AdvBench prompts and utility on
+held-out HelpSteer prompts, with the off-diagonal cases (refusal
+after utility ablation, utility after safety ablation) quantifying
+causal separability. All figures are added to section \ref{sec:figures} of the appendix.

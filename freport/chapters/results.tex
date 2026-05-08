@@ -1,5 +1,96 @@
 \section{Results}
 \subsection{Subspace Geometry}
-\subsection{Methods Comparisons}
+
+\subsection{DoM}
+\label{sec:results-dom}
+
+Across post-embedding layers, the mean signed cosine between the
+DoM safety and utility directions stays close to zero: $+0.10$ for
+Gemma-3-1B, $-0.24$ for Gemma-3-4B, $+0.17$ for Gemma-4-E2B, $+0.06$
+for Llama-3.2-3B, and $+0.10$ for Qwen-3.5-4B. The sign indicates
+whether the directions tend to point with each other ($+$) or
+against each other ($-$); the magnitude indicates how strongly. None
+of the five models exhibits a sustained alignment in either
+direction.
+
+The picture remains the same when looking at individual layers.
+Several achieve near-perfect orthogonality: layer 8 of Gemma-3-4B
+($\cos = +0.04$), layers 11 and 15 of Gemma-4-E2B ($\cos = +0.01,
++0.02$), layers 17--20 of Llama-3.2-3B ($-0.02 \le \cos \le +0.02$),
+and layers 6--9 of Qwen-3.5-4B ($-0.01 \le \cos \le +0.01$). When
+measured against a random-pair null distribution, no layer in any
+model exceeds the upper null bound, while a substantial fraction
+fall below the lower bound: 17 of 29 layers in Llama-3.2-3B and 15
+of 33 in Qwen-3.5-4B. For these two models, DoM safety and utility
+are \emph{more} orthogonal than chance at most depths.
+
+Gemma-3-4B is the partial exception. Its safety and utility
+directions are strongly \emph{anti-aligned} at layer 11
+($\cos = -0.90$), and weakly aligned at layer 6 ($\cos = +0.62$).
+The negative cosine at layer 11 means refusal and helpfulness are
+encoded along opposite axes there: one direction simultaneously
+pushes toward refusal and away from helpful response. This
+phenomenon is layer-localized rather than global --- 32 of the
+model's 35 layers still fall within the null band --- but it shows
+that not all layers separate the two behaviors orthogonally even
+when the model average suggests they do.
+
+Ranking the five models from most to least orthogonal under DoM
+(by mean $|\cos|$): Qwen-3.5-4B (0.10), Llama-3.2-3B (0.11),
+Gemma-4-E2B (0.17), Gemma-3-1B (0.24), and Gemma-3-4B (0.37).
+
+\subsection{ActSVD}
+\label{sec:results-actsvd}
+
+Mean subspace overlap (rank $r=10$, mean squared cosine of principal
+angles) is 0.28 for Gemma-3-1B, 0.26 for Gemma-3-4B, 0.20 for
+Gemma-4-E2B, 0.15 for Llama-3.2-3B, and 0.18 for Qwen-3.5-4B
+(Table~\ref{tab:geom}). The overlap score is non-negative by
+construction, since it averages squared cosines, so unlike DoM it
+does not distinguish alignment from anti-alignment --- only their
+combined magnitude. Three of the five models fall under 0.20, which
+we read as ``largely orthogonal''; the two Gemma-3 checkpoints land
+in the moderate-overlap range $0.20{-}0.50$.
+
+Depth structure is consistent across all five models: overlap is
+highest in the early third, drops through the middle, and reaches
+its minimum in the late third. Llama-3.2-3B moves from 0.28 (early)
+to 0.13 (middle) to 0.07 (late); Qwen-3.5-4B from 0.34 to 0.10 to
+0.09; Gemma-4-E2B from 0.33 to 0.13 to 0.12; the two Gemma-3
+checkpoints follow the same shape from $\sim$0.45 down to
+$\sim$0.13--0.17. The most-separated layer in every model is in the
+final third --- specifically layer 26 of 27, 34 of 35, 34 of 36,
+28 of 29, and 31 of 33 --- with overlap scores of 0.13, 0.09, 0.05,
+0.04, and 0.07 respectively. By the end of the network, harmful
+information and helpful information occupy nearly perpendicular
+subspaces of the residual stream.
+
+The top principal-angle cosine tells the same story. Minimum top
+cosines across post-embedding layers are 0.59, 0.65, 0.51, 0.49,
+and 0.55 for the five models. No late-layer subspace pair exhibits
+a single shared direction approaching cosine 1; the orthogonality
+is distributed across the rank-10 subspace rather than driven by a
+small number of dominant axes.
+
+Ranking the five models from most to least orthogonal under
+ActSVD (by mean overlap): Llama-3.2-3B (0.15), Qwen-3.5-4B (0.18),
+Gemma-4-E2B (0.20), Gemma-3-4B (0.26), and Gemma-3-1B (0.28).
+
+\section{DoM and ActSVD: Agreement}
+\label{sec:results-synthesis}
+The two methods agree qualitatively. DoM finds safety and utility
+directions whose mean cosine is small in either sign across layers,
+often more orthogonal than chance, with the partial exception of a
+single anti-aligned mid-layer in Gemma-3-4B. ActSVD finds subspaces
+whose principal angles increase with depth, becoming nearly
+perpendicular in late layers. The model rankings are also nearly
+identical between methods: Llama-3.2-3B and Qwen-3.5-4B show the
+cleanest separation under both methods, while the two Gemma-3
+checkpoints show the most residual entanglement. Both methods
+identify the late layers as the cleanest candidates for
+projection-style intervention, motivating the ablation experiments
+in Section~\ref{sec:ablation}.
+
+
 \subsection{Causal Ablations}
-\subsection{Models Comparisons}
+\subsection{Cross-Model Comparison}

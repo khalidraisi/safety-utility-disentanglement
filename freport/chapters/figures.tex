@@ -185,20 +185,13 @@
 \end{figure}
 
 \subsection{ActSVD and Contrastive SVD subspace overlap}
-\label{sec:figures-actsvd}
-
+\label{sec:figures-actsvdcsvd}
+We only ran contrastive SVD on llama3.2-3B-Instruct.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.95\linewidth]{../images/overlap_gemma-3-1b-it.png}
     \caption{ActSVD subspace overlap --- Gemma-3-1B-IT.}
     \label{fig:actsvd-gemma3-1b}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_gemma-3-1b-it.png}
-    \caption{Contrastive SVD subspace overlap --- Gemma-3-1B-IT.}
-    \label{fig:csvd-gemma3-1b}
 \end{figure}
 
 \begin{figure}[h]
@@ -210,23 +203,9 @@
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_gemma-3-4b-it.png}
-    \caption{Contrastive SVD subspace overlap --- Gemma-3-4B-IT.}
-    \label{fig:csvd-gemma3-4b}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
     \includegraphics[width=0.95\linewidth]{../images/overlap_gemma-4-E2B-it.png}
     \caption{ActSVD subspace overlap --- Gemma-4-E2B-IT.}
     \label{fig:actsvd-gemma4-e2b}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_gemma-4-E2B-it.png}
-    \caption{Contrastive SVD subspace overlap --- Gemma-4-E2B-IT.}
-    \label{fig:csvd-gemma4-e2b}
 \end{figure}
 
 \begin{figure}[h]
@@ -238,9 +217,16 @@
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_llama-3.2-3b.png}
-    \caption{Contrastive SVD subspace overlap --- Llama-3.2-3B-Instruct.}
-    \label{fig:csvd-llama3-3b}
+    \includegraphics[width=0.95\linewidth]{../images/csvd_safety_overlap_llama-3.2-3b.png}
+    \caption{Contrastive SVD subspace overlap (Safe vs Unsafe pairing) --- Llama-3.2-3B-Instruct.}
+    \label{fig:csvdsu-llama3-3b}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\linewidth]{../images/csvd_utility_overlap_llama-3.2-3b.png}
+    \caption{Contrastive SVD subspace overlap (useful vs useless pairing) --- Llama-3.2-3B-Instruct.}
+    \label{fig:csvduu-llama3-3b}
 \end{figure}
 
 \begin{figure}[h]
@@ -248,11 +234,4 @@
     \includegraphics[width=0.95\linewidth]{../images/overlap_qwen-3.5-4b.png}
     \caption{ActSVD subspace overlap --- Qwen-3.5-4B.}
     \label{fig:actsvd-qwen35-4b}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.95\linewidth]{../images/csvd_overlap_qwen-3.5-4b.png}
-    \caption{Contrastive SVD subspace overlap --- Qwen-3.5-4B.}
-    \label{fig:csvd-qwen35-4b}
 \end{figure}

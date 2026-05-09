@@ -12,3 +12,4 @@ huggingface-hub==1.9.1
 tokenizers==0.22.2
 tqdm==4.67.3
 pandas==3.0.2
+openai==2.36

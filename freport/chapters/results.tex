@@ -1,31 +1,12 @@
 \section{Results}
 \subsection{Subspace Geometry}
-We characterize the internal geometry of safety and utility
-representations using three methods: Difference-of-Means
-(DoM), which extracts a single signed direction per behavior per layer;
-ActSVD, which compares rank-$r=10$ subspaces of safety and utility
-activations via principal angles; and ContrastiveSVD, which repeats
-the subspace comparison on difference vectors between matched prompt
-pairs, controlling for prompt-level confounders such as length and
-syntactic form. All three methods are applied to all five models,
+All three methods are applied to all five models,
 with the exception of ContrastiveSVD, which we run on Llama-3.2-3B
 only~\ref{sec:figures-actsvdcsvd}. Across methods and models, a
 consistent picture emerges: safety and utility occupy largely
 orthogonal directions and subspaces in the residual stream, with
 entanglement concentrated in early layers and near-perpendicular
 separation emerging in the final third of each network.
-
-The ActSVD overlap profiles for all five models share a common
-depth structure. At layer 0 (the embedding), the overlap score is
-exactly 1.0 for every model by construction, since both subspaces
-are extracted from the same token distribution. Overlap then drops
-sharply after the first transformer block and continues declining
-monotonically through the middle layers, reaching its minimum in
-the final third of each network. This pattern holds without
-exception across all five architectures, suggesting that the
-progressive separation of safety and utility representations is a
-general property of instruction tuned transformers rather than an
-artifact of any particular model family or scale.
 
 Llama-3.2-3B exhibits the cleanest separation of all five models
 under ActSVD. Its overlap score falls from 1.0 at layer 0 to

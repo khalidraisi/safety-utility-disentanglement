@@ -59,7 +59,7 @@ Requires Python 3.10+
 │   ├── ablation/       # Safety and utility ablation
 │   ├── dom/            # Difference-of-Means direction
 │   ├── locatelayers/   # Layer selection and similarity analysis
-│   ├── svd/            # actSVD subspace extraction
+│   ├── svd/            # SVD subspace extraction (Contrastive SVD and ActSVD)
 │   └── extract_activations.py    # Main script for extracting model hidden states
 ├── freport/            # Final report
 │   ├── chapters/       # Individual report chapters

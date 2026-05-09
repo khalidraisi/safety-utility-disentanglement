@@ -1,6 +1,19 @@
 \section{Results}
 \subsection{Subspace Geometry}
-
+We apply three geometric probes to characterize how safety and utility
+are represented across layers: Difference-of-Means (DoM), which
+extracts a single signed direction per behavior per layer;
+ActSVD, which compares rank-$r=10$ subspaces of safety and utility
+activations via principal angles; and ContrastiveSVD, which repeats
+the ActSVD comparison on difference vectors between matched prompt
+pairs, controlling for prompt-level confounders such as length and
+syntactic form. All three methods are applied to all five models,
+with the exception of ContrastiveSVD, which we run on Llama-3.2-3B
+only~\ref{sec:figures-actsvdcsvd}. Across methods and models, there is a
+consistent pattern: safety and utility occupy largely
+orthogonal directions and subspaces in the residual stream, with
+entanglement concentrated in early layers and near-perpendicular
+separation emerging in the final third of each network.
 
 \subsection{DoM}
 \label{sec:results-dom}

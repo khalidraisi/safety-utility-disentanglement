@@ -1,1 +1,33 @@
 \section{Discussion and Conclusion}
+Our results indicate that the entanglement of safety and utility is layer dependent,
+where in the earlier layers of the model they are aligned/anti-aligned. However, at the
+mid-late layers we often find that they become near orthogonal. And generally speaking,
+this is consistent across the different subspace extraction methods we use, namely,
+DoM, ActSVD and contrastive SVD. Furthermore, we found that ablations also do preserve
+similar performance on the non-ablated property. Both of which suggest that our 
+interpretation of the Activation space could be indeed true and this is 
+not a mere coincidence, another possibile way to test this is by establishing the 
+"reverse" of this relation, i.e could a sparse autoencoder from a dataset containing
+jumbled up refusal and useful inducing behaviour reproduce the correct sets? If so 
+this could be more evidence that they are separable. This nevertheless motivates further
+work to be done in this to potentially establish causal independence as per
+\citet{park2023LRH} framework establishing a more rigorous relationship between 
+safety and utility, this work only produces empirical evidence for but does not 
+demonstrate thoroughly, since we examine the behaviour and not the inherent
+representation space. 
+
+Our experiments focus on smaller models, so these findings may not be true for larger
+models or models with different architectures. Also refusal filtering is another 
+limitation, which do tend to let through refusal behaviour or they capture non-refusal
+behaviour. Most importantly however, is that obtaining a usefulness subspace is inherently
+trickier than the refusal subspace, as it is not as clearly defined. It's also harder to
+work with since there is less of a contrast between it and the average LLM behaviour compared
+to refusal behaviour. To address this we also propose another way of obtaining
+a usefulness subspace, whereby one would center it at the mean of usefulness instead of
+centering at the average LLM behaviour. This also nicely sets up work in examining the utility
+subspace and answer if usefulness and uselessness are at all related or not. We l lay 
+some of the prelimenary work for this in \ref{proof}.
+
+We presented an analysis comparing the safety and utility subspaces extracted using 
+multiple different methods. And then targetting our interventions at particular layers
+examining causal independence of safety and utility in instruction tuned LLMs.
